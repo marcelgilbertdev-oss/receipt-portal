@@ -12,6 +12,9 @@
  * which is a write path around RLS — precisely the thing the rest of this repo is
  * built to prevent.
  *
+ * Deployed with --no-verify-jwt: this function authenticates its caller itself (the shared
+ * secret below, compared in constant time), so Supabase's JWT gate is switched off for it.
+ *
  * Secrets (set with `supabase secrets set`):
  *   FINTECH_API_URL    upstream API, e.g. https://zerofayyz-fintech-api.onrender.com
  *   SYNC_SECRET        shared secret checked on every call

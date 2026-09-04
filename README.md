@@ -65,8 +65,21 @@ npm test                                  # the isolation suite, against the liv
 npm run dev                               # the portal
 ```
 
-Deploy the Edge Function with `supabase functions deploy sync-payments` and set
-`FINTECH_API_URL` and `SYNC_SECRET` with `supabase secrets set`.
+The Edge Function is deployed with `--no-verify-jwt`, because it authenticates
+callers itself with a shared secret compared in constant time; Supabase's JWT gate
+would only add a second door that the caller (a scheduler, not a browser) has no
+reason to hold a key for. Deploy and configure it with:
+
+```bash
+supabase functions deploy sync-payments --project-ref <ref> --no-verify-jwt
+supabase secrets set --project-ref <ref> FINTECH_API_URL=https://... SYNC_SECRET=$(openssl rand -hex 24)
+```
+
+Invoke it with `POST /functions/v1/sync-payments`, header `x-sync-secret`, body
+`{"email": "..."}`. It answers `{"synced": N}` — and `{"synced": 0}` for a mailbox it
+has never seen, on purpose, so it cannot be used to discover which addresses have accounts.
+Verified live: no secret → 401; unknown mailbox → 0; a real customer → 93 rows, and 93
+again on the second run because the upsert is keyed on the upstream payment id.
 
 ## Keys
 
