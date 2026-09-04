@@ -1,5 +1,7 @@
 # Receipt portal
 
+**Live: https://receipt-portal-one.vercel.app**
+
 A customer receipt portal built on Supabase. A customer signs in with a one-time email
 link, sees only their own payments, and downloads their receipts. It is the fifth
 independent consumer of the
