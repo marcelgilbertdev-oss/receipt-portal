@@ -56,6 +56,9 @@ interface Customer {
   storagePath: string
 }
 
+/** Every auth user this run creates, so `after` can delete them even when setup failed midway. */
+const createdUserIds: string[] = []
+
 /** Creates a confirmed user, a payment, a receipt row and its PDF object. */
 async function createCustomer(label: string): Promise<Customer> {
   const email = `isolation-${label}-${randomUUID()}@example.test`
@@ -68,6 +71,7 @@ async function createCustomer(label: string): Promise<Customer> {
   })
   assert.equal(createError, null, `creating ${label}: ${createError?.message}`)
   const user = created!.user!
+  createdUserIds.push(user.id)
 
   // The customers row is written by the on_auth_user_created trigger, not here.
   const { data: customerRow, error: customerError } = await admin
@@ -141,6 +145,9 @@ describe('cross-customer isolation', () => {
   after(async () => {
     await destroyCustomer(a)
     await destroyCustomer(b)
+    // Anything created but never returned (setup failed partway) is deleted here too;
+    // deleteUser is idempotent enough that a second delete is a no-op.
+    for (const id of createdUserIds) await admin.auth.admin.deleteUser(id).catch(() => undefined)
   })
 
   it('returns only the caller\'s payments to an unfiltered select', async () => {

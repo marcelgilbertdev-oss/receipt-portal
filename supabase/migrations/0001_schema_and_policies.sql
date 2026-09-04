@@ -87,6 +87,14 @@ alter table public.receipts enable row level security;
 revoke all on public.customers, public.payments, public.receipts from anon, authenticated;
 grant select on public.customers, public.payments, public.receipts to authenticated;
 
+-- The service role is NOT exempt from this. With "Automatically expose new tables"
+-- switched off at project creation, a new table carries no default grants at all —
+-- not for anon, not for authenticated, and not for service_role either. Learned live
+-- on 2026-09-04: the secret key was refused with 42501 until this line existed. That
+-- is default-deny reaching the privileged lane, which is the correct posture; it just
+-- has to be granted back deliberately, here, table by table.
+grant all on public.customers, public.payments, public.receipts to service_role;
+
 -- ---------------------------------------------------------------------------
 -- Policies.
 -- ---------------------------------------------------------------------------
