@@ -1,0 +1,153 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fbfaf8;
+  --panel: #ffffff;
+  --ink: #16181d;
+  --muted: #5b6070;
+  --line: #e2e0dc;
+  --accent: #1f4ed8;
+  --ok-bg: #e7f4ec;
+  --ok-ink: #1c6b3d;
+  --pending-bg: #fdf3e0;
+  --pending-ink: #8a5a10;
+  --refunded-bg: #eeecf9;
+  --refunded-ink: #4b3f96;
+  --error: #b3261e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --panel: #1c1f25;
+    --ink: #eceef2;
+    --muted: #9aa1b0;
+    --line: #2c313a;
+    --accent: #8fb0ff;
+    --ok-bg: #16301f;
+    --ok-ink: #7fd6a0;
+    --pending-bg: #322612;
+    --pending-ink: #e6bd72;
+    --refunded-bg: #241f3d;
+    --refunded-ink: #b3a7f0;
+    --error: #f2b8b5;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.shell {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+.masthead { margin-bottom: 2rem; }
+.masthead h1 { margin: 0; font-size: 1.65rem; letter-spacing: -0.01em; }
+.lede { margin: 0.4rem 0 0; color: var(--muted); }
+
+h2 { font-size: 1.15rem; margin: 0 0 0.5rem; }
+
+form {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 24rem;
+  margin-top: 1.25rem;
+}
+
+label { font-weight: 600; font-size: 0.9rem; }
+
+input {
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.ghost {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--line);
+}
+
+button:disabled { opacity: 0.55; cursor: progress; }
+
+/* Never remove the focus ring; a keyboard user needs to see where they are. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/*
+ * The table becomes a scroll container only when it overflows, and it carries
+ * tabindex so a keyboard user can actually scroll it — a scrollable region that
+ * cannot be reached by keyboard is a WCAG failure that no desktop-width check
+ * will ever surface.
+ */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+
+table { width: 100%; border-collapse: collapse; min-width: 34rem; }
+
+th, td {
+  text-align: left;
+  padding: 0.7rem 0.85rem;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+th { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+tbody tr:last-child td { border-bottom: none; }
+td.numeric, th.numeric { text-align: right; font-variant-numeric: tabular-nums; }
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge--succeeded { background: var(--ok-bg); color: var(--ok-ink); }
+.badge--pending { background: var(--pending-bg); color: var(--pending-ink); }
+.badge--refunded { background: var(--refunded-bg); color: var(--refunded-ink); }
+.badge--created,
+.badge--processing { background: var(--pending-bg); color: var(--pending-ink); }
+.badge--failed,
+.badge--canceled { background: var(--refunded-bg); color: var(--refunded-ink); }
+
+.notice { margin-top: 1.25rem; color: var(--muted); }
+.notice.error { color: var(--error); font-weight: 600; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
