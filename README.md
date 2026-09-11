@@ -56,7 +56,14 @@ cp .env.example .env      # fill in from Project Settings -> API
 npm install
 ```
 
-Apply `supabase/migrations/0001_schema_and_policies.sql` in the SQL editor (it is
+Migrations are tracked by the Supabase CLI since 2026-09-11 (`supabase link`, then `supabase db push`;
+0001 was originally applied by hand and marked applied with `supabase migration repair`).
+`0002_keepalive.sql` adds `public.keepalive()`, a `select now()` that `anon` may execute: the
+platform's scheduled production watch calls it and requires 200, because a request the database
+*refuses* does not count as activity for the free tier's pause timer — learned from a pause
+warning on 2026-09-11 while the old refusal-only check was green.
+
+For a fresh project, apply `supabase/migrations/0001_schema_and_policies.sql` in the SQL editor (it is
 idempotent). Then:
 
 ```bash
